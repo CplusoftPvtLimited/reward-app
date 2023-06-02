@@ -15,9 +15,8 @@ class HomeScreen extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        body: CustomScrollView(
+          slivers: [
             Stack(
               children: [
                 Container(
@@ -328,7 +327,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
+            SliverFillRemaining(
                 child: ListView.builder(
                     itemCount: 10,
                     itemBuilder: (context, index) => InkWell(
@@ -397,8 +396,7 @@ class HomeScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                        )))
-            //Menu Section End
+                        ))),
           ],
         ),
       ),
