@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rewardapp/utils/auth_check.dart';
 import 'package:rewardapp/view/auth_screens/login.dart';
 import 'package:rewardapp/view/other_screens/history.dart';
 import 'package:rewardapp/view/other_screens/profile_setting.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -74,9 +76,18 @@ class ProfileScreen extends StatelessWidget {
             height: 7,
           ),
           InkWell(
-            onTap: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => SignInScreen()));
+            onTap: () async {
+              // Obtain shared preferences.
+              final SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
+
+              await prefs.remove('user').then((value) {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AuthCheck(),
+                    ));
+              });
             },
             child: Container(
               color: Color(0xffF1F1F1),

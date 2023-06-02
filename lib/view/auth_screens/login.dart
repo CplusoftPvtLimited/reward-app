@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rewardapp/controller/auth_controller.dart';
+import 'package:rewardapp/utils/auth_check.dart';
 import 'package:rewardapp/view/auth_screens/forgot_password.dart';
 import 'package:rewardapp/view/other_screens/bottom_nav.dart';
 
@@ -11,6 +13,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
   bool _rememberMe = false;
   final GlobalKey<FormState> _formKey = GlobalKey();
   @override
@@ -76,6 +80,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       const SizedBox(height: 16.0),
                       TextFormField(
+                        controller: _email,
                         validator: (val) {
                           if (val!.isEmpty) {
                             return "Email required";
@@ -93,6 +98,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       const SizedBox(height: 16.0),
                       TextFormField(
+                        controller: _password,
                         validator: (val) {
                           if (val!.isEmpty) {
                             return "Password required";
@@ -150,12 +156,22 @@ class _SignInScreenState extends State<SignInScreen> {
                       InkWell(
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const BottomNavBarScreen(),
-                                ));
+                            AuthController()
+                                .Login(_email.text, _password.text)
+                                .then((value) {
+                              if (value) {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const AuthCheck(),
+                                    ));
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            "Email Or Password is incorrect")));
+                              }
+                            });
                           }
                         },
                         child: Container(

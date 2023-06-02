@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
+import '../../controller/product_controller.dart';
 import 'product_details.dart';
 
 class ProductList extends StatelessWidget {
@@ -8,6 +10,7 @@ class ProductList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var productProvider = Provider.of<ProductController>(context);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -26,7 +29,7 @@ class ProductList extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.only(top: 10),
         child: GridView.builder(
-          itemCount: 6,
+          itemCount: productProvider.products.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10,
@@ -37,7 +40,8 @@ class ProductList extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProductDetailsScreen(),
+                    builder: (context) => ProductDetailsScreen(
+                        productProvider.products[index].id),
                   ));
             },
             child: Padding(

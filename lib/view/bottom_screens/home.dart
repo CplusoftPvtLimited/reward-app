@@ -1,17 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:rewardapp/controller/categoryControler.dart';
+import 'package:rewardapp/controller/product_controller.dart';
 
 import '../product_screens/product_category_grid.dart';
 import '../product_screens/product_details.dart';
 import '../product_screens/product_list.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<ProductController>(context, listen: false).getProducts();
+    Provider.of<CategoryController>(context, listen: false).getCategories();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var productProvider = Provider.of<ProductController>(context);
+    var categoryProvider = Provider.of<CategoryController>(context);
     var size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -258,7 +276,7 @@ class HomeScreen extends StatelessWidget {
               padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 5),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 10,
+                itemCount: categoryProvider.category.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
@@ -298,7 +316,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              'Royal Bombs',
+                              categoryProvider.category[index].title,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.openSans(
                                   fontSize: 13,
@@ -330,13 +348,14 @@ class HomeScreen extends StatelessWidget {
             ),
             Expanded(
                 child: ListView.builder(
-                    itemCount: 10,
+                    itemCount: productProvider.products.length,
                     itemBuilder: (context, index) => InkWell(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ProductDetailsScreen(),
+                                  builder: (context) => ProductDetailsScreen(
+                                      productProvider.products[index].id),
                                 ));
                           },
                           child: Padding(
@@ -372,7 +391,7 @@ class HomeScreen extends StatelessWidget {
                                         ),
                                       ),
                                       title: Text(
-                                        'Royal Bombs',
+                                        productProvider.products[index].title,
                                         style: GoogleFonts.montserrat(
                                             color: Colors.white
                                             // You can customize other properties like color, letterSpacing, etc.

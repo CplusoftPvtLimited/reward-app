@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rewardapp/controller/categoryControler.dart';
+import 'package:rewardapp/controller/product_controller.dart';
+import 'package:rewardapp/utils/auth_check.dart';
 
 import 'view/auth_screens/login.dart';
 
@@ -12,13 +16,23 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ProductController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CategoryController(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: AuthCheck(),
       ),
-      home: SignInScreen(),
     );
   }
 }

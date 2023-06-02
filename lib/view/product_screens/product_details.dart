@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:rewardapp/controller/product_controller.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
+  String id;
+  ProductDetailsScreen(this.id);
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
@@ -10,13 +14,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool _isExpanded = true;
   @override
   Widget build(BuildContext context) {
+    var productProvider = Provider.of<ProductController>(context)
+        .products
+        .where(
+          (element) => element.id == widget.id,
+        )
+        .first;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Colors.black),
             title: Text(
-              "Sweet Donut",
+              productProvider.title,
               style: GoogleFonts.montserrat(
                 fontSize: 16,
                 color: Colors.black,
@@ -176,10 +186,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                         ),
                         SizedBox(height: 8),
-                        Text('Calories: 250'),
-                        Text('Fat: 10g'),
-                        Text('Carbohydrates: 35g'),
-                        Text('Protein: 5g'),
+                        Text(productProvider.description),
                       ],
                     ),
                   ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:rewardapp/view/product_screens/product_list.dart';
 
+import '../../controller/categoryControler.dart';
 import 'product_details.dart';
 
 class ProductCategoryGridScreen extends StatelessWidget {
@@ -9,6 +11,7 @@ class ProductCategoryGridScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var categoryProvider = Provider.of<CategoryController>(context);
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
@@ -26,7 +29,7 @@ class ProductCategoryGridScreen extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.only(top: 10),
         child: GridView.builder(
-          itemCount: 8,
+          itemCount: categoryProvider.category.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10,
@@ -74,7 +77,7 @@ class ProductCategoryGridScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Text(
-                        "Royal Bombs",
+                        categoryProvider.category[index].title,
                         style: GoogleFonts.montserrat(
                           fontSize: 16.0,
                           color: Colors.white,
