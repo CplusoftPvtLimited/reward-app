@@ -34,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
@@ -347,77 +346,74 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Expanded(
-                child: ListView.builder(
-                    itemCount: productProvider.products.length,
-                    itemBuilder: (context, index) => InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetailsScreen(
-                                      productProvider.products[index].id),
-                                ));
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Card(
-                                    color: Color.fromARGB(255, 73, 61, 61),
-                                    elevation: 2,
-                                    shadowColor: Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    child: ListTile(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 5, horizontal: 15),
-                                      leading: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        height: 50,
-                                        width: 50,
-                                        child: ClipRRect(
+              child: ListView.builder(
+                  itemCount: productProvider.products.length,
+                  itemBuilder: (context, index) => InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailsScreen(
+                                    productProvider.products[index].id),
+                              ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Card(
+                                  color: Color.fromARGB(255, 73, 61, 61),
+                                  elevation: 2,
+                                  shadowColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 15),
+                                    leading: Container(
+                                      decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(15),
-                                          child: Image.network(
-                                            "https://www.shugarysweets.com/wp-content/uploads/2020/01/baked-chocolate-donuts-recipe.jpg",
-                                            fit: BoxFit.fill,
-                                          ),
+                                              BorderRadius.circular(15)),
+                                      height: 50,
+                                      width: 50,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.network(
+                                          "https://www.shugarysweets.com/wp-content/uploads/2020/01/baked-chocolate-donuts-recipe.jpg",
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
-                                      title: Text(
-                                        productProvider.products[index].title,
-                                        style: GoogleFonts.montserrat(
-                                            color: Colors.white
-                                            // You can customize other properties like color, letterSpacing, etc.
-                                            ),
-                                      ),
-                                      subtitle: const Text(
-                                        "\$ 12.99",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      trailing: Text(
-                                        "13⭐",
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 14.0,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
+                                    ),
+                                    title: Text(
+                                      productProvider.products[index].title,
+                                      style: GoogleFonts.montserrat(
+                                          color: Colors.white
                                           // You can customize other properties like color, letterSpacing, etc.
-                                        ),
+                                          ),
+                                    ),
+                                    subtitle: const Text(
+                                      "\$ 12.99",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    trailing: Text(
+                                      "13⭐",
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 14.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        // You can customize other properties like color, letterSpacing, etc.
                                       ),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        )))
-            //Menu Section End
+                        ),
+                      )),
+            ),
           ],
         ),
       ),
