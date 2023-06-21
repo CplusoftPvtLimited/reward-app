@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rewardapp/controller/categoryControler.dart';
 import 'package:rewardapp/controller/product_controller.dart';
+import 'package:rewardapp/controller/rewardController.dart';
 import 'package:rewardapp/controller/storeController.dart';
 import 'package:rewardapp/utils/auth_check.dart';
+import 'package:rewardapp/view/other_screens/rewaredScreen.dart';
 
 import 'view/auth_screens/login.dart';
 
@@ -19,6 +21,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (context) => RewardController(),
+        ),
         ChangeNotifierProvider(
           create: (context) => StoreController(),
         ),

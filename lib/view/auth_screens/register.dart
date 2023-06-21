@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rewardapp/controller/auth_controller.dart';
+import 'package:rewardapp/view/auth_screens/login.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -9,6 +11,12 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final TextEditingController _firstname = TextEditingController();
+  final TextEditingController _lastname = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _confromPassword = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -72,6 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: 25,
                         ),
                         TextFormField(
+                          controller: _firstname,
                           validator: (val) {
                             if (val!.isEmpty) {
                               return "field is required";
@@ -91,6 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: 10,
                         ),
                         TextFormField(
+                          controller: _lastname,
                           validator: (val) {
                             if (val!.isEmpty) {
                               return "field is required";
@@ -121,6 +131,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: 25,
                         ),
                         TextFormField(
+                          controller: _email,
                           validator: (val) {
                             if (val!.isEmpty) {
                               return "email is required";
@@ -140,6 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: 10,
                         ),
                         TextFormField(
+                          controller: _password,
                           validator: (val) {
                             if (val!.isEmpty) {
                               return "password is required";
@@ -157,10 +169,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   onPressed: () {},
                                   icon: Icon(Icons.remove_red_eye))),
                         ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         TextFormField(
+                          controller: _confromPassword,
                           validator: (val) {
                             if (val!.isEmpty) {
                               return "password conformation is required";
+                            } else if (val != _password.text) {
+                              return "confrom password is not same as password";
                             }
                           },
                           decoration: InputDecoration(
@@ -184,8 +202,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             backgroundColor: Colors.black45,
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("User created")));
+                                AuthController()
+                                    .SignUp(_firstname.text, _lastname.text,
+                                        _email.text, _password.text)
+                                    .then((value) {
+                                  if (value == true) {
+                                    _firstname.text = '';
+                                    _lastname.text = '';
+                                    _email.text = '';
+                                    _password.text = '';
+                                    _confromPassword.text = '';
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              content: const Text(
+                                                  "You have been Registered"),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                SignInScreen(),
+                                                          ));
+                                                    },
+                                                    child:
+                                                        const Text("Login Now"))
+                                              ],
+                                            ));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("User Created")));
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content:
+                                                Text("Somthing Went Wrong")));
+                                  }
+                                });
                               }
                               // TODO: Implement sign-in functionality
                             },

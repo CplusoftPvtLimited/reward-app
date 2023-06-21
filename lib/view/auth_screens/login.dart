@@ -220,21 +220,27 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 60,
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton.extended(
+                  backgroundColor: Color.fromARGB(255, 73, 61, 61),
+                  onPressed: () {
+                    // TODO: Implement sign-in functionality
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUpScreen(),
+                        ));
+                  },
+                  label: Text('Join Now'),
+                  icon: Icon(Icons.login),
+                ),
+              ),
             ],
           ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Color.fromARGB(255, 73, 61, 61),
-          onPressed: () {
-            // TODO: Implement sign-in functionality
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SignUpScreen(),
-                ));
-          },
-          label: Text('Join Now'),
-          icon: Icon(Icons.login),
         ),
       ),
     );

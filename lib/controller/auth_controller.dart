@@ -35,4 +35,28 @@ class AuthController with ChangeNotifier {
     }
     return false;
   }
+
+  Future<bool> SignUp(
+      String firstname, String lastname, String email, String password) async {
+    try {
+      var response = await http
+          .post(Uri.parse('${ApiUrl.BASE_URL}${ApiUrl.SIGNUP_ENDPOINT}'),
+              body: jsonEncode({
+                "first_name": firstname,
+                "last_name": lastname,
+                "email": email,
+                "password": password,
+              }),
+              headers: {'Content-Type': 'application/json'});
+      print(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        print(jsonDecode(response.body));
+        return true;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+    return false;
+  }
 }

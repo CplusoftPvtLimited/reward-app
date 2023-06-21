@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:rewardapp/controller/categoryControler.dart';
 import 'package:rewardapp/controller/product_controller.dart';
+import 'package:rewardapp/controller/rewardController.dart';
 
 import '../product_screens/product_category_grid.dart';
 import '../product_screens/product_details.dart';
@@ -18,16 +19,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isListview = true;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Provider.of<ProductController>(context, listen: false).getProducts();
     Provider.of<CategoryController>(context, listen: false).getCategories();
+    isListview = true;
   }
 
   @override
   Widget build(BuildContext context) {
+    var rewardProvider = Provider.of<RewardController>(context);
     var productProvider = Provider.of<ProductController>(context);
     var categoryProvider = Provider.of<CategoryController>(context);
     var size = MediaQuery.of(context).size;
@@ -170,9 +175,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         CircularPercentIndicator(
                                           radius: 30.0,
                                           lineWidth: 5.0,
-                                          percent: 0.6,
-                                          center: const Text(
-                                            "38⭐",
+                                          percent: rewardProvider.reward /
+                                              (rewardProvider.reward + 250),
+                                          center: Text(
+                                            "${rewardProvider.reward}⭐",
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 color: Colors.white),
@@ -204,11 +210,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         CircularPercentIndicator(
                                           radius: 30.0,
                                           lineWidth: 5.0,
-                                          percent: 0.4,
-                                          center: const Text(
-                                            "106⭐",
+                                          percent: rewardProvider.reward /
+                                              (rewardProvider.reward + 1000),
+                                          center: Text(
+                                            "${rewardProvider.reward}⭐",
                                             style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 color: Colors.white),
                                           ),
                                           progressColor:
@@ -288,23 +295,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 8),
                       child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          gradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 46, 46, 46),
-                                Color.fromARGB(255, 73, 61, 61)
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter),
-                        ),
+                        decoration: BoxDecoration(),
                         padding: const EdgeInsets.all(8),
                         child: Column(
                           children: [
                             Container(
+                              padding: const EdgeInsets.all(5),
                               width: 50,
                               height: 50,
                               decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      Color.fromARGB(255, 46, 46, 46),
+                                      Color.fromARGB(255, 73, 61, 61)
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter),
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   image: NetworkImage(
@@ -313,14 +319,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
                               categoryProvider.category[index].title,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.openSans(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white
+                                  color: Colors.black
                                   // You can customize other properties like color, letterSpacing, etc.
                                   ),
                             ),
@@ -336,19 +342,115 @@ class _HomeScreenState extends State<HomeScreen> {
             //Menu Section Start
             Padding(
               padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-              child: Text(
-                "Products",
-                style: GoogleFonts.montserrat(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600,
-                  // You can customize other properties like color, letterSpacing, etc.
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Products",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
+                      // You can customize other properties like color, letterSpacing, etc.
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isListview = true;
+                            });
+                          },
+                          icon: Icon(Icons.list)),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isListview = false;
+                            });
+                          },
+                          icon: Icon(Icons.grid_view_outlined))
+                    ],
+                  )
+                ],
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                  itemCount: productProvider.products.length,
-                  itemBuilder: (context, index) => InkWell(
+              child: isListview
+                  ? ListView.builder(
+                      itemCount: productProvider.products.length,
+                      itemBuilder: (context, index) => InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductDetailsScreen(
+                                        productProvider.products[index].id),
+                                  ));
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 2),
+                                    child: ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 15),
+                                      leading: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        height: 50,
+                                        width: 50,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          child: Image.network(
+                                            "https://www.shugarysweets.com/wp-content/uploads/2020/01/baked-chocolate-donuts-recipe.jpg",
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        productProvider.products[index].title,
+                                        style: GoogleFonts.montserrat(
+                                            color: Colors.black
+                                            // You can customize other properties like color, letterSpacing, etc.
+                                            ),
+                                      ),
+                                      subtitle: const Text(
+                                        "\$ 12.99",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      trailing: Text(
+                                        "13 ⭐",
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 14.0,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                          // You can customize other properties like color, letterSpacing, etc.
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Divider(
+                                    thickness: 1,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ))
+                  : GridView.builder(
+                      itemCount: productProvider.products.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              mainAxisExtent: 160),
+                      itemBuilder: (context, index) => InkWell(
                         onTap: () {
                           Navigator.push(
                               context,
@@ -358,61 +460,57 @@ class _HomeScreenState extends State<HomeScreen> {
                               ));
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Card(
-                                  color: Color.fromARGB(255, 73, 61, 61),
-                                  elevation: 2,
-                                  shadowColor: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 15),
-                                    leading: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      height: 50,
-                                      width: 50,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(15),
-                                        child: Image.network(
-                                          "https://www.shugarysweets.com/wp-content/uploads/2020/01/baked-chocolate-donuts-recipe.jpg",
-                                          fit: BoxFit.fill,
-                                        ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Color.fromARGB(255, 212, 212, 212)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  height: 100,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Image.network(
+                                      "https://www.royal-donuts.de/wp-content/uploads/2022/02/cool-bombs-caramel-cool-flash-30705201938597_600x-300x300.png"),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  productProvider.products[index].title,
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black),
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                SizedBox(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: const [
+                                      Text(
+                                        "\$ 12.99",
+                                        style: TextStyle(color: Colors.black),
                                       ),
-                                    ),
-                                    title: Text(
-                                      productProvider.products[index].title,
-                                      style: GoogleFonts.montserrat(
-                                          color: Colors.white
-                                          // You can customize other properties like color, letterSpacing, etc.
-                                          ),
-                                    ),
-                                    subtitle: const Text(
-                                      "\$ 12.99",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    trailing: Text(
-                                      "13⭐",
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 14.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        // You can customize other properties like color, letterSpacing, etc.
-                                      ),
-                                    ),
+                                      Text("13 ⭐",
+                                          style: TextStyle(color: Colors.black))
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      )),
+                      ),
+                    ),
             ),
           ],
         ),

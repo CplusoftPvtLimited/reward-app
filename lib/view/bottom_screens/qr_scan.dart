@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:rewardapp/controller/rewardController.dart';
+import 'package:rewardapp/model/product.dart';
+import 'package:rewardapp/view/other_screens/rewaredScreen.dart';
 
 class QRScannerScreen extends StatefulWidget {
   @override
@@ -12,6 +18,8 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
+
+  bool isScanningEnabled = true;
 
   @override
   void initState() {
@@ -114,8 +122,22 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      // Handle scanned QR code data
-      print(scanData.code);
+      if (scanData.code!.isNotEmpty) {
+        if (isScanningEnabled) {
+          isScanningEnabled = false; // Disable further scanning
+          // Process the scanned QR code here
+          Map<String, dynamic> data = jsonDecode(scanData.code.toString());
+          int reward = data['reward'];
+
+          Provider.of<RewardController>(context, listen: false)
+              .addReward(reward);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RewardedScreen(rewardPoint: reward),
+              ));
+        }
+      }
     });
   }
 

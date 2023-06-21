@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rewardapp/utils/auth_check.dart';
 import 'package:rewardapp/view/auth_screens/login.dart';

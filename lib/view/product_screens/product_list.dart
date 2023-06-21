@@ -84,7 +84,7 @@ class ProductList extends StatelessWidget {
                             "\$ 12.99",
                             style: TextStyle(color: Colors.white),
                           ),
-                          Text("13⭐", style: TextStyle(color: Colors.white))
+                          Text("13 ⭐", style: TextStyle(color: Colors.white))
                         ],
                       ),
                     ),
