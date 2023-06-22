@@ -7,6 +7,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:rewardapp/controller/rewardController.dart';
 import 'package:rewardapp/model/product.dart';
+import 'package:rewardapp/model/rewardModel.dart';
 import 'package:rewardapp/view/other_screens/rewaredScreen.dart';
 
 class QRScannerScreen extends StatefulWidget {
@@ -127,15 +128,23 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
           isScanningEnabled = false; // Disable further scanning
           // Process the scanned QR code here
           Map<String, dynamic> data = jsonDecode(scanData.code.toString());
-          int reward = data['reward'];
-
-          Provider.of<RewardController>(context, listen: false)
-              .addReward(reward);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RewardedScreen(rewardPoint: reward),
-              ));
+          print(data);
+          if (data.containsKey('reward_points') &&
+              data.containsKey('userId') &&
+              data.containsKey('status')) {
+            var reward = RewardModel.fromJson(data);
+            print(reward.reward_points);
+            Provider.of<RewardController>(context, listen: false)
+                .addReward(reward);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      RewardedScreen(rewardPoint: reward.reward_points),
+                ));
+          } else {
+            return;
+          }
         }
       }
     });

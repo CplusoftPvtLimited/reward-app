@@ -17,6 +17,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confromPassword = TextEditingController();
 
+  bool passIsObscure = true;
+  bool conformIsObscure = true;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -151,6 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: 10,
                         ),
                         TextFormField(
+                          obscureText: passIsObscure,
                           controller: _password,
                           validator: (val) {
                             if (val!.isEmpty) {
@@ -166,7 +170,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               border: const OutlineInputBorder(),
                               labelText: 'Password',
                               suffixIcon: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    passIsObscure = !passIsObscure;
+                                  },
                                   icon: Icon(Icons.remove_red_eye))),
                         ),
                         const SizedBox(
@@ -174,6 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         TextFormField(
                           controller: _confromPassword,
+                          obscureText: conformIsObscure,
                           validator: (val) {
                             if (val!.isEmpty) {
                               return "password conformation is required";
@@ -190,7 +197,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               border: const OutlineInputBorder(),
                               labelText: 'Confrom Password',
                               suffixIcon: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    conformIsObscure = !conformIsObscure;
+                                  },
                                   icon: Icon(Icons.remove_red_eye))),
                         ),
                         const SizedBox(
@@ -200,12 +209,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           alignment: Alignment.centerRight,
                           child: FloatingActionButton.extended(
                             backgroundColor: Colors.black45,
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                AuthController()
+                                await AuthController()
                                     .SignUp(_firstname.text, _lastname.text,
                                         _email.text, _password.text)
                                     .then((value) {
+                                  print(value);
                                   if (value == true) {
                                     _firstname.text = '';
                                     _lastname.text = '';

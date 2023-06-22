@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class RewardController with ChangeNotifier {
-  List<int> _rewardPoints = [];
+import '../model/rewardModel.dart';
 
-  List<int> get rewardPoints {
+class RewardController with ChangeNotifier {
+  List<RewardModel> _rewardPoints = [];
+
+  List<RewardModel> get rewardPoints {
     return [..._rewardPoints];
   }
 
-  void addReward(int reward) {
+  void addReward(RewardModel reward) {
     _rewardPoints.add(reward);
 
     notifyListeners();
@@ -17,7 +19,7 @@ class RewardController with ChangeNotifier {
     int total = 0;
     if (_rewardPoints.isNotEmpty) {
       for (int i = 0; i < _rewardPoints.length; i++) {
-        total += _rewardPoints[i];
+        total += _rewardPoints[i].reward_points;
       }
     }
 

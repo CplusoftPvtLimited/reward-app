@@ -16,6 +16,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   bool _rememberMe = false;
+  bool passIsObscure = true;
   final GlobalKey<FormState> _formKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -104,7 +105,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             return "Password required";
                           }
                         },
-                        obscureText: true,
+                        obscureText: passIsObscure,
                         decoration: InputDecoration(
                           focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
@@ -112,7 +113,9 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                passIsObscure = !passIsObscure;
+                              },
                               icon: const Icon(Icons.remove_red_eye)),
                           labelText: 'Password',
                         ),

@@ -18,12 +18,14 @@ class AuthController with ChangeNotifier {
           headers: {'Content-Type': 'application/json'});
 
       var result = jsonDecode(response.body)['customer'];
+      print(result);
 
       if (result != null) {
+        print("yes");
         UserModel userModel =
             UserModel.fromJson(jsonDecode(response.body)['customer']);
         // print(userModel.toJson().toString());
-        prefs.setString('user', userModel.toJson().toString());
+        prefs.setString('user', jsonEncode(userModel.toJson()));
 
         return true;
       } else {
@@ -49,13 +51,13 @@ class AuthController with ChangeNotifier {
               }),
               headers: {'Content-Type': 'application/json'});
       print(jsonDecode(response.body));
-      if (response.statusCode == 200) {
-        print(jsonDecode(response.body));
+
+      var userData = jsonDecode(response.body);
+      if (userData['status'] == "success") {
         return true;
       }
     } catch (e) {
       print(e);
-      return false;
     }
     return false;
   }
