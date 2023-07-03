@@ -1,23 +1,21 @@
 enum RewardStatus { Gain, Redeem }
 
 class RewardModel {
-  final int reward_points;
+  final String reward_points;
   final String userId;
-  final DateTime date;
+  final String date;
   final RewardStatus status;
 
-  RewardModel(
+  RewardModel(this.date,
       {required this.reward_points,
       required this.userId,
-      required this.date,
       required this.status});
 
   factory RewardModel.fromJson(Map map) {
-    return RewardModel(
-        reward_points: map['reward_points'],
-        userId: map['userId'],
-        date: DateTime.now(),
+    return RewardModel(DateTime.now().toIso8601String(),
+        reward_points: map['points'],
+        userId: map['user_id'],
         status:
-            map['status'] == "Gain" ? RewardStatus.Gain : RewardStatus.Redeem);
+            map['status'] == "gain" ? RewardStatus.Gain : RewardStatus.Redeem);
   }
 }

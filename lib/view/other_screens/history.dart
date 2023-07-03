@@ -42,7 +42,8 @@ class HistoryScreen extends StatelessWidget {
                         ? Colors.green
                         : Colors.red),
               ),
-              subtitle: Text(formatDate(rewardProvider[index].date)),
+              subtitle:
+                  Text(formatDate(DateTime.parse(rewardProvider[index].date))),
               trailing: Text(
                 rewardProvider[index].status == RewardStatus.Gain
                     ? "+ ${rewardProvider[index].reward_points}"

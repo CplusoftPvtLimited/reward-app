@@ -129,8 +129,8 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
           // Process the scanned QR code here
           Map<String, dynamic> data = jsonDecode(scanData.code.toString());
           print(data);
-          if (data.containsKey('reward_points') &&
-              data.containsKey('userId') &&
+          if (data.containsKey('points') &&
+              data.containsKey('user_id') &&
               data.containsKey('status')) {
             var reward = RewardModel.fromJson(data);
             print(reward.reward_points);
@@ -139,8 +139,8 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      RewardedScreen(rewardPoint: reward.reward_points),
+                  builder: (context) => RewardedScreen(
+                      rewardPoint: int.parse(reward.reward_points)),
                 ));
           } else {
             return;
